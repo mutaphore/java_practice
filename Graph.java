@@ -88,9 +88,9 @@ public class Graph {
             return;
 
         // Add to vertices
-        if (!vertices.contains(v1))
+        if (search(v1) == null)
             vertices.add(new Vertex(v1));
-        if (!vertices.contains(v2))
+        if (search(v2) == null)
             vertices.add(new Vertex(v2));
 
         // Add to adjacent list
@@ -123,11 +123,13 @@ public class Graph {
     public void DFS() {
         Vertex vertex;
 
+        System.out.println("DFS");
         for (int i = 0; i < vertices.size(); i++) {
             vertex = vertices.get(i);
             if (!vertex.isVisited())
                 dfs(vertex);
         }
+        System.out.println();
     }
 
     private void dfs(Vertex vertex) {
@@ -155,7 +157,12 @@ public class Graph {
         ArrayList<Integer> adjList;
         Iterator<Integer> iter;
 
-        System.out.println("Adjancent list: ");
+        System.out.println("Vertices");
+        for (int i = 0; i < vertices.size(); i++)
+            System.out.print(vertices.get(i).id + " ");
+        System.out.println();
+
+        System.out.println("Adjancent list");
         for (int i = 0; i < adjLists.size(); i++) {
             adjList = adjLists.get(i);
             if (adjList != null && adjList.size() > 0)
@@ -168,11 +175,5 @@ public class Graph {
             if (adjList.size() > 0)
                 System.out.println();
         }
-
-        System.out.println("Vertices: ");
-        for (int i = 0; i < vertices.size(); i++) {
-            System.out.print(vertices.get(i).id + " ");
-        }
-        // System.out.println();
     }
 }
