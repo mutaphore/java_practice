@@ -14,60 +14,138 @@ public class Graph {
         public void visit() {
             this.visited = true;
         }
-    }
 
-    private ArrayList<ArrayList<Vertex>> graph;
-
-    public Graph(int n) {
-
-        graph = new ArrayList<ArrayList<Vertex>>(n);
-        for (int i = 0; i < n; i++)
-            graph.add(new ArrayList<Vertex>());
-    }
-
-    public void addEdge(int v1, int v2) {
-        ArrayList<Vertex> adjList;
-        Iterator<Vertex> iter;
-        boolean found;
-
-        if ((v1 < 0 || v1 >= graph.size()) || (v2 < 0 || v2 >= graph.size()))
-            return;
-
-        adjList = graph.get(v1);
-        iter = adjList.iterator();
-
-        found = false;
-        while (iter.hasNext()) {
-            if (iter.next().id == v2) {
-                found = true;
-                break;
-            }
+        public boolean isVisited() {
+            return this.visited;
         }
 
-        if (!found)
-            adjList.add(new Vertex(v2));
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Vertex)
+                return this.id == ((Vertex)obj).id;
+            else
+                return false;
+        }
     }
 
-    public void deleteEdge(int v1, int v2) {
-        ArrayList<Vertex> adjList;
+    private ArrayList<ArrayList<Integer>> adjLists;
+    private ArrayList<Vertex> vertices;
+    private boolean directed;
 
-        if ((v1 < 0 || v1 >= graph.size()) || (v2 < 0 || v2 >= graph.size()))
+    public Graph() {
+
+        this.directed = false;
+        adjLists = new ArrayList<ArrayList<Integer>>();
+        vertices = new ArrayList<Vertex>();
+        extend(10);
+    }
+
+    public Graph(boolean directed) {
+
+        this.directed = directed;
+        adjLists = new ArrayList<ArrayList<Integer>>();
+        vertices = new ArrayList<Vertex>();
+        extend(10);
+    }
+
+    private void extend(int n) {
+        int newSize;
+
+        if (n <= adjLists.size())
             return;
 
-        adjList = graph.get(v1);
+        adjLists.ensureCapacity(n);
+        newSize = n - adjLists.size();
+        for (int i = 0; i < newSize; i++)
+            adjLists.add(new ArrayList<Integer>());
+    }
+
+    private void refresh() {
+
+        for (int i = 0; i < )
+    }
+
+    public boolean isDirected() {
+        return this.directed;
+    }
+
+    public void addEdge(Integer v1, Integer v2) {
+        ArrayList<Integer> adjList;
+
+        if (v1 == v2)
+            return;
+
+        // Add to vertices
+        if (!vertices.contains(v1))
+            vertices.add(new Vertex(v1));
+        if (!vertices.contains(v2))
+            vertices.add(new Vertex(v2));
+
+        // Add to adjacent list
+        try {
+            extend(Math.max(v1, v2) + 1);
+            adjList = adjLists.get(v1);
+            if (adjList.indexOf(v2) == -1) {
+                adjList.add(v2);
+                if (!directed)
+                    adjLists.get(v2).add(v1);
+            }
+        } catch (Exception e) {
+            // Index out of bounds
+            return;
+        }
+    }
+
+    public void delEdge(Integer v1, Integer v2) {
+
+        try {
+            adjLists.get(v1).remove(v2);
+            if (!directed)
+                adjLists.get(v2).remove(v1);
+        } catch (Exception e) {
+            // Index out of bounds
+            return;
+        }
+    }
+
+    public void DFS() {
+        refresh();
+        // dfs(adjLists.get(0).get(0));
+    }
+
+    private void dfs(Vertex vertex) {
+        Iterator<Integer> iter;
+
+        if (vertex.visited == true)
+            return;
+
+        System.out.println(vertex.id);  // Visit
+        vertex.visited = true;
+
+        try {
+            iter = adjLists.get(vertex.id).iterator();
+            while (iter.hasNext())
+                dfs(iter.next());
+        } catch (Exception e) {
+            return;
+        }
     }
 
     public void print() {
-        ArrayList<Vertex> adjList;
-        Iterator<Vertex> iter;
+        ArrayList<Integer> adjList;
+        Iterator<Integer> iter;
 
-        for (int i = 0; i < graph.size(); i++) {
-            System.out.print(i + ": ");
-            adjList = graph.get(i);
+        for (int i = 0; i < adjLists.size(); i++) {
+            adjList = adjLists.get(i);
+            if (adjList != null && adjList.size() > 0)
+                System.out.print(i + ": ");
+
             iter = adjList.iterator();
             while (iter.hasNext())
-                System.out.print(iter.next().id + " ");
-            System.out.println();
+                System.out.print(iter.next() + " ");
+
+            if (adjList.size() > 0)
+                System.out.println();
         }
     }
 }
