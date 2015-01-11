@@ -23,6 +23,6 @@ public class GraphDriver {
 
         graph.print();
 
-        // graph.DFS();
+        graph.DFS();
     }
 }

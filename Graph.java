@@ -19,6 +19,14 @@ public class Graph {
             return this.visited;
         }
 
+        public int getId() {
+            return this.id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Vertex)
@@ -60,9 +68,13 @@ public class Graph {
             adjLists.add(new ArrayList<Integer>());
     }
 
-    private void refresh() {
+    private Vertex search(int id) {
+        int index = vertices.indexOf(new Vertex(id));
 
-        for (int i = 0; i < )
+        if (index < 0)
+            return null;
+
+        return vertices.get(index);
     }
 
     public boolean isDirected() {
@@ -109,23 +121,31 @@ public class Graph {
     }
 
     public void DFS() {
-        refresh();
-        // dfs(adjLists.get(0).get(0));
+        Vertex vertex;
+
+        for (int i = 0; i < vertices.size(); i++) {
+            vertex = vertices.get(i);
+            if (!vertex.isVisited())
+                dfs(vertex);
+        }
     }
 
     private void dfs(Vertex vertex) {
         Iterator<Integer> iter;
+        Vertex adjVertex;
 
-        if (vertex.visited == true)
+        if (vertex.isVisited())
             return;
 
-        System.out.println(vertex.id);  // Visit
-        vertex.visited = true;
+        System.out.print(vertex.getId() + " ");  // Visit
+        vertex.visit();
 
         try {
-            iter = adjLists.get(vertex.id).iterator();
-            while (iter.hasNext())
-                dfs(iter.next());
+            iter = adjLists.get(vertex.getId()).iterator();
+            while (iter.hasNext()) {
+                adjVertex = search(iter.next());
+                dfs(adjVertex);
+            }
         } catch (Exception e) {
             return;
         }
@@ -135,6 +155,7 @@ public class Graph {
         ArrayList<Integer> adjList;
         Iterator<Integer> iter;
 
+        System.out.println("Adjancent list: ");
         for (int i = 0; i < adjLists.size(); i++) {
             adjList = adjLists.get(i);
             if (adjList != null && adjList.size() > 0)
@@ -147,5 +168,11 @@ public class Graph {
             if (adjList.size() > 0)
                 System.out.println();
         }
+
+        System.out.println("Vertices: ");
+        for (int i = 0; i < vertices.size(); i++) {
+            System.out.print(vertices.get(i).id + " ");
+        }
+        // System.out.println();
     }
 }
