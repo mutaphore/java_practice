@@ -56,6 +56,7 @@ public class Graph {
         extend(10);
     }
 
+    // Extends the adjacent list to contain n vertices
     private void extend(int n) {
         int newSize;
 
@@ -68,13 +69,17 @@ public class Graph {
             adjLists.add(new ArrayList<Integer>());
     }
 
+    // Searches in vertices for vertex with id
     private Vertex search(int id) {
-        int index = vertices.indexOf(new Vertex(id));
+        Iterator<Vertex> iter = vertices.iterator();
+        Vertex vertex;
 
-        if (index < 0)
-            return null;
-
-        return vertices.get(index);
+        while(iter.hasNext()) {
+            vertex = iter.next();
+            if (vertex.getId() == id)
+                return vertex;
+        }
+        return null;
     }
 
     public boolean isDirected() {
@@ -123,11 +128,13 @@ public class Graph {
     public void DFS() {
         Vertex vertex;
 
-        System.out.println("DFS");
+        System.out.print("DFS:");
         for (int i = 0; i < vertices.size(); i++) {
             vertex = vertices.get(i);
-            if (!vertex.isVisited())
+            if (!vertex.isVisited()) {
+                System.out.println();
                 dfs(vertex);
+            }
         }
         System.out.println();
     }
@@ -153,20 +160,36 @@ public class Graph {
         }
     }
 
+    public void BFS() {
+        Vertex vertex;
+
+        System.out.println("BFS -");
+        for (int i = 0; i < vertices.size(); i++) {
+            vertex = vertices.get(i);
+            if (!vertex.isVisited())
+                dfs(vertex);
+        }
+        System.out.println();
+    }
+
+    private void bfs(Vertex vertex) {
+
+    }
+
     public void print() {
         ArrayList<Integer> adjList;
         Iterator<Integer> iter;
 
-        System.out.println("Vertices");
+        System.out.print("Vertices: ");
         for (int i = 0; i < vertices.size(); i++)
             System.out.print(vertices.get(i).id + " ");
         System.out.println();
 
-        System.out.println("Adjancent list");
+        System.out.println("Adjancent list:");
         for (int i = 0; i < adjLists.size(); i++) {
             adjList = adjLists.get(i);
             if (adjList != null && adjList.size() > 0)
-                System.out.print(i + ": ");
+                System.out.print(i + " -> ");
 
             iter = adjList.iterator();
             while (iter.hasNext())
