@@ -11,22 +11,6 @@ public class Graph {
             this.visited = false;
         }
 
-        public void visit() {
-            this.visited = true;
-        }
-
-        public boolean isVisited() {
-            return this.visited;
-        }
-
-        public int getId() {
-            return this.id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Vertex)
@@ -56,6 +40,10 @@ public class Graph {
         extend(10);
     }
 
+    public boolean isDirected() {
+        return this.directed;
+    }
+
     // Extends the adjacent list to contain n vertices
     private void extend(int n) {
         int newSize;
@@ -76,16 +64,13 @@ public class Graph {
 
         while(iter.hasNext()) {
             vertex = iter.next();
-            if (vertex.getId() == id)
+            if (vertex.id == id)
                 return vertex;
         }
         return null;
     }
 
-    public boolean isDirected() {
-        return this.directed;
-    }
-
+    // Add an edge to graph
     public void addEdge(Integer v1, Integer v2) {
         ArrayList<Integer> adjList;
 
@@ -113,6 +98,7 @@ public class Graph {
         }
     }
 
+    // Deletes an edge from graph
     public void delEdge(Integer v1, Integer v2) {
 
         try {
@@ -146,11 +132,11 @@ public class Graph {
         if (vertex.isVisited())
             return;
 
-        System.out.print(vertex.getId() + " ");  // Visit
-        vertex.visit();
+        System.out.print(vertex.id + " ");  // Visit
+        vertex.visited = true;
 
         try {
-            iter = adjLists.get(vertex.getId()).iterator();
+            iter = adjLists.get(vertex.id).iterator();
             while (iter.hasNext()) {
                 adjVertex = search(iter.next());
                 dfs(adjVertex);
@@ -163,17 +149,33 @@ public class Graph {
     public void BFS() {
         Vertex vertex;
 
-        System.out.println("BFS -");
+        System.out.println("BFS:");
         for (int i = 0; i < vertices.size(); i++) {
             vertex = vertices.get(i);
-            if (!vertex.isVisited())
+            if (!vertex.visited)
                 dfs(vertex);
         }
         System.out.println();
     }
 
     private void bfs(Vertex vertex) {
+        ArrayList<Integer> queue = new ArrayList<Integer>();
+        ArrayList<Integer> adjList;
+        Vertex curVert, adjVert;
 
+        queue.add(vertex.id);
+
+        while (!queue.isEmpty()) {
+            curVert = search(queue.remove(0));
+            curVert.visited = true;
+            System.out.print(curVert.id);
+            adjList = adjLists.get(curVert.id);
+            for (int i = 0; i < adjList.size(); i++) {
+                adjVert = search(adjList.get(i));
+                if (adjVert.visited == false)
+                    queue.add(adjList.get(i));
+            }
+        }
     }
 
     public void print() {
