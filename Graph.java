@@ -70,6 +70,13 @@ public class Graph {
         return null;
     }
 
+    // Sets all vertices to unvisited
+    private void refresh() {
+
+        for (int i = 0; i < vertices.size(); i++)
+            vertices.get(i).visited = false;
+    }
+
     // Add an edge to graph
     public void addEdge(Integer v1, Integer v2) {
         ArrayList<Integer> adjList;
@@ -114,10 +121,12 @@ public class Graph {
     public void DFS() {
         Vertex vertex;
 
+        refresh();
+
         System.out.print("DFS:");
         for (int i = 0; i < vertices.size(); i++) {
             vertex = vertices.get(i);
-            if (!vertex.isVisited()) {
+            if (!vertex.visited) {
                 System.out.println();
                 dfs(vertex);
             }
@@ -129,7 +138,7 @@ public class Graph {
         Iterator<Integer> iter;
         Vertex adjVertex;
 
-        if (vertex.isVisited())
+        if (vertex.visited)
             return;
 
         System.out.print(vertex.id + " ");  // Visit
@@ -149,11 +158,15 @@ public class Graph {
     public void BFS() {
         Vertex vertex;
 
-        System.out.println("BFS:");
+        refresh();
+        
+        System.out.print("BFS:");
         for (int i = 0; i < vertices.size(); i++) {
             vertex = vertices.get(i);
-            if (!vertex.visited)
-                dfs(vertex);
+            if (!vertex.visited) {
+                System.out.println();
+                bfs(vertex);
+            }
         }
         System.out.println();
     }
@@ -168,7 +181,7 @@ public class Graph {
         while (!queue.isEmpty()) {
             curVert = search(queue.remove(0));
             curVert.visited = true;
-            System.out.print(curVert.id);
+            System.out.print(curVert.id + " ");
             adjList = adjLists.get(curVert.id);
             for (int i = 0; i < adjList.size(); i++) {
                 adjVert = search(adjList.get(i));
